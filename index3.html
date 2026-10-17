@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARKET AUTO - Marketing Automation System (CRM)</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#FEF2F2',
+                            100: '#FEE2E2',
+                            500: '#EF4444',
+                            600: '#DC2626',
+                            700: '#B91C1C',
+                            bg: '#FDF8F8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js for Visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Custom scrollbar for modern feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.03);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(220, 38, 38, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(220, 38, 38, 0.6);
+        }
+    </style>
+</head>
+<body class="bg-[#FDF8F8] dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white dark:bg-gray-800 border-b border-red-100 dark:border-gray-700 sticky top-0 z-30 shadow-sm">
+        <div class="px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <!-- Left Branding & Navigation Toggle -->
+            <div class="flex items-center space-x-3">
+                <button id="mobileMenuBtn" class="md:hidden text-gray-600 dark:text-gray-300 hover:text-brand-600 focus:outline-none p-1">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-brand-600 text-white flex items-center justify-center rounded-xl shadow-md shadow-brand-500/20">
+                        <i class="fa-solid fa-bullhorn text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-1.5">
+                            <span class="font-bold text-xl tracking-tight text-gray-900 dark:text-white">MARKET</span>
+                            <span class="font-extrabold text-xl tracking-tight text-brand-600">AUTO</span>
+                        </div>
+                        <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium leading-none hidden sm:block">FREE WEB DEVELOPMENT INTERNSHIP ONLINE • MANAGEMENT SYSTEM</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Header Center: Badges -->
+            <div class="hidden lg:flex items-center space-x-2 text-xs">
+                <span class="bg-red-50 dark:bg-red-950/40 text-brand-600 dark:text-red-400 font-semibold px-2.5 py-1 rounded-full border border-red-100 dark:border-red-900/50 flex items-center gap-1.5">
+                    <i class="fa-solid fa-building text-xs"></i> Data Alcott Systems
+                </span>
+                <span class="bg-red-50 dark:bg-red-950/40 text-brand-600 dark:text-red-400 font-semibold px-2.5 py-1 rounded-full border border-red-100 dark:border-red-900/50 flex items-center gap-1.5">
+                    <i class="fa-solid fa-globe text-xs"></i> freeinternships.in
+                </span>
+                <span class="bg-brand-600 text-white font-bold px-3 py-1 rounded-full text-[11px] shadow-sm uppercase tracking-wide flex items-center gap-1">
+                    <i class="fa-solid fa-bullhorn"></i> Marketing
+                </span>
+                <span class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-600">
+                    WD-CRM-005
+                </span>
+            </div>
+
+            <!-- Header Right: User & Actions -->
+            <div class="flex items-center space-x-3">
+                <button id="themeToggleBtn" class="p-2 text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-500 rounded-lg transition-colors">
+                    <i class="fa-solid fa-moon text-lg dark:hidden"></i>
+                    <i class="fa-solid fa-sun text-lg hidden dark:block text-amber-400"></i>
+                </button>
+                <div class="relative">
+                    <button id="notificationBtn" class="p-2 text-gray-500 dark:text-gray-400 hover:text-brand-600 rounded-lg relative">
+                        <i class="fa-solid fa-bell text-lg"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-brand-600 rounded-full"></span>
+                    </button>
+                </div>
+                <!-- User Profile Trigger -->
+                <div class="flex items-center space-x-2 pl-2 border-l border-gray-200 dark:border-gray-700 cursor-pointer" onclick="toggleModal('userModal')">
+                    <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="User" class="w-8 h-8 rounded-full border border-brand-500 object-cover">
+                    <div class="hidden sm:block text-left">
+                        <p id="userNameDisplay" class="text-xs font-bold leading-tight text-gray-800 dark:text-gray-200">Sarah Jenkins</p>
+                        <p class="text-[10px] text-brand-600 dark:text-red-400 font-medium">Marketing Lead</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex-1 flex overflow-hidden">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 border-r border-red-100 dark:border-gray-700 flex-shrink-0 fixed md:relative inset-y-0 left-0 z-20 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out flex flex-col justify-between pt-16 md:pt-0">
+            <div class="p-4 space-y-1 overflow-y-auto">
+                <div class="text-[11px] font-bold uppercase tracking-wider text-gray-400 px-3 mb-2">Main Navigation</div>
+                
+                <a href="#" onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all bg-red-50 text-brand-600 dark:bg-red-950/50 dark:text-red-400">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="#" onclick="switchTab('campaigns')" id="nav-campaigns" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700/50">
+                    <i class="fa-solid fa-paper-plane w-5 text-center"></i>
+                    <span>Campaigns</span>
+                </a>
+
+                <a href="#" onclick="switchTab('templates')" id="nav-templates" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700/50">
+                    <i class="fa-solid fa-envelope-open-text w-5 text-center"></i>
+                    <span>Email Templates</span>
+                </a>
+
+                <a href="#" onclick="switchTab('subscribers')" id="nav-subscribers" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700/50">
+                    <i class="fa-solid fa-users w-5 text-center"></i>
+                    <span>Subscriber List</span>
+                </a>
+
+                <a href="#" onclick="switchTab('analytics')" id="nav-analytics" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700/50">
+                    <i class="fa-solid fa-chart-line w-5 text-center"></i>
+                    <span>Analytics</span>
+                </a>
+
+                <a href="#" onclick="switchTab('workflows')" id="nav-workflows" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700/50">
+                    <i class="fa-solid fa-diagram-project w-5 text-center"></i>
+                    <span>Workflows</span>
+                </a>
+
+                <a href="#" onclick="switchTab('landing')" id="nav-landing" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700/50">
+                    <i class="fa-solid fa-laptop-code w-5 text-center"></i>
+                    <span>Landing Pages</span>
+                </a>
+
+                <a href="#" onclick="switchTab('reports')" id="nav-reports" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700/50">
+                    <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i>
+                    <span>Reports & ROI</span>
+                </a>
+
+                <div class="text-[11px] font-bold uppercase tracking-wider text-gray-400 px-3 pt-4 mb-2">Account</div>
+
+                <a href="#" onclick="switchTab('users')" id="nav-users" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700/50">
+                    <i class="fa-solid fa-user-gear w-5 text-center"></i>
+                    <span>User Management</span>
+                </a>
+            </div>
+
+            <!-- Internship Card Banner in Sidebar -->
+            <div class="p-4 border-t border-gray-100 dark:border-gray-700 bg-red-50/50 dark:bg-gray-800/80 m-3 rounded-2xl border">
+                <div class="flex items-center space-x-2 text-brand-600 dark:text-red-400 font-bold text-xs mb-1">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>Task Specification</span>
+                </div>
+                <p class="text-[11px] text-gray-600 dark:text-gray-300 leading-tight">WD-CRM-005 Task Online CRM Internship Project</p>
+                <div class="mt-2 text-[10px] text-gray-500 dark:text-gray-400 flex items-center justify-between">
+                    <span>Task Domain: CRM</span>
+                    <span class="font-semibold text-brand-600">Active</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Overlay for Mobile Sidebar -->
+        <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-10 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+        <!-- Main Workspace Area -->
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+
+            <!-- PAGE 1: DASHBOARD -->
+            <section id="page-dashboard" class="page-content space-y-6">
+                <!-- Banner Header -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-red-600 to-brand-700 text-white p-6 rounded-3xl shadow-lg shadow-brand-600/10">
+                    <div>
+                        <div class="flex items-center space-x-2 text-red-100 text-xs font-semibold mb-1">
+                            <i class="fa-solid fa-rocket"></i>
+                            <span>Marketing Automation System Dashboard</span>
+                        </div>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Campaign & Email Automation</h1>
+                        <p class="text-red-100 text-sm mt-1 max-w-xl">Monitor active automated sequences, campaign reach, conversion metrics, and audience acquisition in real time.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="toggleModal('campaignModal')" class="bg-white text-brand-600 hover:bg-red-50 font-bold px-4 py-2.5 rounded-xl text-sm shadow transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> New Campaign
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-red-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Total Campaigns</p>
+                                <h3 id="statTotalCampaigns" class="text-2xl font-bold text-gray-900 dark:text-white mt-1">12</h3>
+                            </div>
+                            <span class="p-2.5 bg-red-50 dark:bg-red-950/50 text-brand-600 dark:text-red-400 rounded-xl">
+                                <i class="fa-solid fa-paper-plane text-lg"></i>
+                            </span>
+                        </div>
+                        <div class="mt-3 flex items-center text-xs text-emerald-600 font-medium">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>
+                            <span>+25% from last month</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-red-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Active Subscribers</p>
+                                <h3 id="statTotalSubscribers" class="text-2xl font-bold text-gray-900 dark:text-white mt-1">8,450</h3>
+                            </div>
+                            <span class="p-2.5 bg-red-50 dark:bg-red-950/50 text-brand-600 dark:text-red-400 rounded-xl">
+                                <i class="fa-solid fa-users text-lg"></i>
+                            </span>
+                        </div>
+                        <div class="mt-3 flex items-center text-xs text-emerald-600 font-medium">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>
+                            <span>+12.4% new leads</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-red-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Avg. Open Rate</p>
+                                <h3 id="statAvgOpenRate" class="text-2xl font-bold text-gray-900 dark:text-white mt-1">34.8%</h3>
+                            </div>
+                            <span class="p-2.5 bg-red-50 dark:bg-red-950/50 text-brand-600 dark:text-red-400 rounded-xl">
+                                <i class="fa-solid fa-envelope-open text-lg"></i>
+                            </span>
+                        </div>
+                        <div class="mt-3 flex items-center text-xs text-emerald-600 font-medium">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>
+                            <span>+4.2% industry avg</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-red-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Conversion Rate</p>
+                                <h3 id="statAvgConversion" class="text-2xl font-bold text-gray-900 dark:text-white mt-1">5.6%</h3>
+                            </div>
+                            <span class="p-2.5 bg-red-50 dark:bg-red-950/50 text-brand-600 dark:text-red-400 rounded-xl">
+                                <i class="fa-solid fa-chart-line-up text-lg"></i>
+                            </span>
+                        </div>
+                        <div class="mt-3 flex items-center text-xs text-emerald-600 font-medium">
+                            <i class="fa-solid fa-arrow-up mr-1"></i>
+                            <span>+$14,230 revenue</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-base font-bold text-gray-900 dark:text-white">Subscriber Growth & Campaign Email Open Rates</h3>
+                                <p class="text-xs text-gray-500">Monthly overview of subscriber list size vs interaction</p>
+                            </div>
+                            <span class="text-xs bg-red-50 dark:bg-red-950/50 text-brand-600 font-semibold px-2.5 py-1 rounded-lg">2026 Data</span>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="growthChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Campaign Status Breakdown -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-gray-900 dark:text-white mb-1">Campaign Status Overview</h3>
+                            <p class="text-xs text-gray-500 mb-4">Live status distribution across all active campaigns</p>
+                            <div class="h-48 relative">
+                                <canvas id="statusDoughnutChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 grid grid-cols-2 gap-2 text-xs">
+                            <div class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span><span>Draft</span></div>
+                            <div class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span><span>Scheduled</span></div>
+                            <div class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span><span>In Progress</span></div>
+                            <div class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span><span>Completed</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Campaigns Quick View -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-bold text-gray-900 dark:text-white">Active Campaigns Quick Summary</h3>
+                        <a href="#" onclick="switchTab('campaigns')" class="text-xs font-semibold text-brand-600 dark:text-red-400 hover:underline">View All Campaigns &rarr;</a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider rounded-lg">
+                                <tr>
+                                    <th class="p-3">Campaign Name</th>
+                                    <th class="p-3">Status</th>
+                                    <th class="p-3">Audience Target</th>
+                                    <th class="p-3">Open Rate</th>
+                                    <th class="p-3">Click Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboardCampaignsList" class="divide-y divide-gray-100 dark:divide-gray-700">
+                                <!-- Populated dynamically by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE 2: CAMPAIGN MANAGEMENT -->
+            <section id="page-campaigns" class="page-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Campaign Management</h2>
+                        <p class="text-xs text-gray-500">Create, edit, delete, and launch automated marketing email campaigns.</p>
+                    </div>
+                    <button onclick="toggleModal('campaignModal')" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm shadow flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Create Campaign
+                    </button>
+                </div>
+
+                <!-- Filters & Search -->
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-red-100 dark:border-gray-700 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="relative w-full md:w-80">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400 text-xs"></i>
+                        <input type="text" id="campaignSearch" onkeyup="filterCampaigns()" placeholder="Search campaigns by title..." class="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                        <span class="text-xs font-semibold text-gray-500">Filter Status:</span>
+                        <button onclick="setCampaignFilter('All')" class="filter-btn active bg-brand-600 text-white text-xs px-3 py-1.5 rounded-xl font-medium">All</button>
+                        <button onclick="setCampaignFilter('Draft')" class="filter-btn bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs px-3 py-1.5 rounded-xl font-medium">Draft</button>
+                        <button onclick="setCampaignFilter('Scheduled')" class="filter-btn bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs px-3 py-1.5 rounded-xl font-medium">Scheduled</button>
+                        <button onclick="setCampaignFilter('In Progress')" class="filter-btn bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs px-3 py-1.5 rounded-xl font-medium">In Progress</button>
+                        <button onclick="setCampaignFilter('Completed')" class="filter-btn bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs px-3 py-1.5 rounded-xl font-medium">Completed</button>
+                    </div>
+                </div>
+
+                <!-- Campaigns Table -->
+                <div class="bg-white dark:bg-gray-800 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="p-4">Campaign Title</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4">Target Segment</th>
+                                    <th class="p-4">Schedule Date</th>
+                                    <th class="p-4">Performance</th>
+                                    <th class="p-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="campaignsTableBody" class="divide-y divide-gray-100 dark:divide-gray-700">
+                                <!-- Dynamic Campaigns Rendering -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE 3: EMAIL TEMPLATES -->
+            <section id="page-templates" class="page-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Email Template Builder</h2>
+                        <p class="text-xs text-gray-500">Design dynamic, conversion-oriented HTML email templates for campaigns.</p>
+                    </div>
+                    <button onclick="toggleModal('templateModal')" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm shadow flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Create Template
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="templatesGrid">
+                    <!-- Templates Rendered Here Dynamic -->
+                </div>
+            </section>
+
+            <!-- PAGE 4: SUBSCRIBER LIST -->
+            <section id="page-subscribers" class="page-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Subscriber List & Segmentation</h2>
+                        <p class="text-xs text-gray-500">Manage target contact list, segment audiences, import/export contacts.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="exportSubscribersCSV()" class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-csv"></i> Export CSV
+                        </button>
+                        <button onclick="toggleModal('subscriberModal')" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm shadow flex items-center gap-2">
+                            <i class="fa-solid fa-user-plus"></i> Add Subscriber
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Subscriber Search & Segment Selector -->
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-red-100 dark:border-gray-700 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="relative w-full md:w-80">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400 text-xs"></i>
+                        <input type="text" id="subscriberSearch" onkeyup="filterSubscribers()" placeholder="Search by name or email..." class="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                    </div>
+                    <div class="flex items-center gap-2 w-full md:w-auto">
+                        <span class="text-xs font-semibold text-gray-500">Segment:</span>
+                        <select id="subscriberSegmentFilter" onchange="filterSubscribers()" class="bg-gray-50 dark:bg-gray-700 text-xs border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 rounded-xl p-2 focus:outline-none">
+                            <option value="All">All Segments</option>
+                            <option value="VIP">VIP</option>
+                            <option value="New Leads">New Leads</option>
+                            <option value="Customers">Customers</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Subscribers Table -->
+                <div class="bg-white dark:bg-gray-800 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="p-4">Contact</th>
+                                    <th class="p-4">Segment Tag</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4">Joined Date</th>
+                                    <th class="p-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subscribersTableBody" class="divide-y divide-gray-100 dark:divide-gray-700">
+                                <!-- Subscribers List Rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE 5: CAMPAIGN ANALYTICS -->
+            <section id="page-analytics" class="page-content space-y-6 hidden">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Campaign Analytics</h2>
+                    <p class="text-xs text-gray-500">In-depth deliverability, engagement, open, click, bounce, and conversion stats.</p>
+                </div>
+
+                <!-- Key Metrics row -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-red-100 dark:border-gray-700">
+                        <p class="text-xs text-gray-500">Total Emails Sent</p>
+                        <h4 class="text-xl font-bold text-gray-900 dark:text-white mt-1">45,210</h4>
+                        <span class="text-[10px] text-emerald-600 font-semibold">99.2% Delivered</span>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-red-100 dark:border-gray-700">
+                        <p class="text-xs text-gray-500">Unique Open Rate</p>
+                        <h4 class="text-xl font-bold text-gray-900 dark:text-white mt-1">36.4%</h4>
+                        <span class="text-[10px] text-emerald-600 font-semibold">+3.1% YoY</span>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-red-100 dark:border-gray-700">
+                        <p class="text-xs text-gray-500">Click-Through Rate</p>
+                        <h4 class="text-xl font-bold text-gray-900 dark:text-white mt-1">12.8%</h4>
+                        <span class="text-[10px] text-brand-600 font-semibold">High Engagement</span>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-red-100 dark:border-gray-700">
+                        <p class="text-xs text-gray-500">Bounce Rate</p>
+                        <h4 class="text-xl font-bold text-gray-900 dark:text-white mt-1">0.8%</h4>
+                        <span class="text-[10px] text-emerald-600 font-semibold">Healthy Reputation</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm">
+                        <h3 class="text-base font-bold text-gray-900 dark:text-white mb-4">Click-Through vs Bounce Rate Comparison</h3>
+                        <div class="h-64">
+                            <canvas id="analyticsBarChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm">
+                        <h3 class="text-base font-bold text-gray-900 dark:text-white mb-4">Email Client Breakdown</h3>
+                        <div class="h-64">
+                            <canvas id="analyticsPieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE 6: AUTOMATION WORKFLOWS -->
+            <section id="page-workflows" class="page-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Automation Workflows</h2>
+                        <p class="text-xs text-gray-500">Trigger-based automated email sequences (Welcome, Nurture, Abandoned Cart).</p>
+                    </div>
+                    <button onclick="triggerWorkflowSimulation()" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm shadow flex items-center gap-2">
+                        <i class="fa-solid fa-play"></i> Simulate Automation Test
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Workflow 1 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 text-xs font-bold px-2.5 py-1 rounded-full">Active</span>
+                            <span class="text-xs text-gray-400">3 Steps Sequence</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Welcome Series</h3>
+                        <p class="text-xs text-gray-500">Triggered immediately when a new lead signs up via web forms.</p>
+                        
+                        <div class="space-y-3 pt-2">
+                            <div class="p-3 bg-red-50 dark:bg-gray-700/50 rounded-xl text-xs border border-red-100 dark:border-gray-600 flex items-center gap-3">
+                                <span class="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-[10px]">1</span>
+                                <div>
+                                    <p class="font-bold text-gray-800 dark:text-gray-200">Trigger: Lead Signup</p>
+                                    <p class="text-gray-500 text-[10px]">Instant Execution</p>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl text-xs border border-gray-100 dark:border-gray-600 flex items-center gap-3">
+                                <span class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center font-bold text-[10px]">2</span>
+                                <div>
+                                    <p class="font-bold text-gray-800 dark:text-gray-200">Send: Welcome Email & Discount</p>
+                                    <p class="text-gray-500 text-[10px]">Delay: 0 mins</p>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl text-xs border border-gray-100 dark:border-gray-600 flex items-center gap-3">
+                                <span class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center font-bold text-[10px]">3</span>
+                                <div>
+                                    <p class="font-bold text-gray-800 dark:text-gray-200">Send: Best Sellers Showcase</p>
+                                    <p class="text-gray-500 text-[10px]">Delay: 2 Days</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Workflow 2 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 text-xs font-bold px-2.5 py-1 rounded-full">Active</span>
+                            <span class="text-xs text-gray-400">2 Steps Sequence</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Abandoned Cart Recovery</h3>
+                        <p class="text-xs text-gray-500">Triggered when checkout is started but not completed within 1 hour.</p>
+
+                        <div class="space-y-3 pt-2">
+                            <div class="p-3 bg-red-50 dark:bg-gray-700/50 rounded-xl text-xs border border-red-100 dark:border-gray-600 flex items-center gap-3">
+                                <span class="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-[10px]">1</span>
+                                <div>
+                                    <p class="font-bold text-gray-800 dark:text-gray-200">Trigger: Cart Left &gt; 1 Hr</p>
+                                    <p class="text-gray-500 text-[10px]">Automated Detection</p>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl text-xs border border-gray-100 dark:border-gray-600 flex items-center gap-3">
+                                <span class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center font-bold text-[10px]">2</span>
+                                <div>
+                                    <p class="font-bold text-gray-800 dark:text-gray-200">Send: "You left items behind!"</p>
+                                    <p class="text-gray-500 text-[10px]">Includes 10% Coupon</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Workflow 3 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-amber-100 dark:bg-amber-950/50 text-amber-600 text-xs font-bold px-2.5 py-1 rounded-full">Paused</span>
+                            <span class="text-xs text-gray-400">4 Steps Sequence</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Lead Nurturing Campaign</h3>
+                        <p class="text-xs text-gray-500">Educates potential enterprise buyers over a 30-day lifecycle.</p>
+
+                        <div class="space-y-3 pt-2">
+                            <div class="p-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl text-xs border border-gray-100 dark:border-gray-600 flex items-center gap-3">
+                                <span class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center font-bold text-[10px]">1</span>
+                                <div>
+                                    <p class="font-bold text-gray-800 dark:text-gray-200">Trigger: eBook Download</p>
+                                    <p class="text-gray-500 text-[10px]">Content Gateway</p>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-gray-50 dark:bg-gray-700/30 rounded-xl text-xs border border-gray-100 dark:border-gray-600 flex items-center gap-3">
+                                <span class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center font-bold text-[10px]">2</span>
+                                <div>
+                                    <p class="font-bold text-gray-800 dark:text-gray-200">Send: Case Study PDF</p>
+                                    <p class="text-gray-500 text-[10px]">Delay: 5 Days</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE 7: LANDING PAGES -->
+            <section id="page-landing" class="page-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Landing Pages Builder</h2>
+                        <p class="text-xs text-gray-500">Design conversion landing pages to collect campaign lead subscribers.</p>
+                    </div>
+                    <button onclick="showToast('Landing Page Builder template editor opened!')" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm shadow flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> New Landing Page
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-red-100 dark:border-gray-700 overflow-hidden shadow-sm">
+                        <div class="h-40 bg-gradient-to-r from-red-500 to-rose-600 p-6 text-white flex flex-col justify-end">
+                            <span class="bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full w-fit mb-2">High Converting</span>
+                            <h3 class="text-xl font-bold">Black Friday Promo Page</h3>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <p class="text-xs text-gray-500">Special seasonal discount landing page with email subscription box.</p>
+                            <div class="flex justify-between text-xs text-gray-600 dark:text-gray-300 font-medium pt-2 border-t border-gray-100 dark:border-gray-700">
+                                <span>Visitors: 4,120</span>
+                                <span>Conversion: 14.2%</span>
+                            </div>
+                            <button onclick="previewLandingPage('Black Friday Promo')" class="w-full bg-red-50 dark:bg-red-950/50 text-brand-600 dark:text-red-400 font-bold py-2 rounded-xl text-xs hover:bg-red-100 transition-colors">
+                                Preview Page Builder
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-3xl border border-red-100 dark:border-gray-700 overflow-hidden shadow-sm">
+                        <div class="h-40 bg-gradient-to-r from-gray-800 to-gray-900 p-6 text-white flex flex-col justify-end">
+                            <span class="bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full w-fit mb-2">Lead Magnet</span>
+                            <h3 class="text-xl font-bold">CRM Masterclass Webinar</h3>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <p class="text-xs text-gray-500">Webinar registration page with integrated automated follow-up workflow.</p>
+                            <div class="flex justify-between text-xs text-gray-600 dark:text-gray-300 font-medium pt-2 border-t border-gray-100 dark:border-gray-700">
+                                <span>Visitors: 1,890</span>
+                                <span>Conversion: 22.8%</span>
+                            </div>
+                            <button onclick="previewLandingPage('CRM Masterclass')" class="w-full bg-red-50 dark:bg-red-950/50 text-brand-600 dark:text-red-400 font-bold py-2 rounded-xl text-xs hover:bg-red-100 transition-colors">
+                                Preview Page Builder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE 8: REPORTS & ROI -->
+            <section id="page-reports" class="page-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Reports & ROI Analysis</h2>
+                        <p class="text-xs text-gray-500">Calculate campaign performance ROI and generate executive summary reports.</p>
+                    </div>
+                    <button onclick="exportCampaignsCSV()" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm shadow flex items-center gap-2">
+                        <i class="fa-solid fa-download"></i> Export CSV Report
+                    </button>
+                </div>
+
+                <!-- Interactive ROI Calculator Widget -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm space-y-4">
+                    <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-brand-600"></i> Interactive Marketing Campaign ROI Calculator
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">Campaign Cost ($)</label>
+                            <input type="number" id="roiCost" value="1200" oninput="calculateROI()" class="w-full p-2.5 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">Generated Revenue ($)</label>
+                            <input type="number" id="roiRevenue" value="8400" oninput="calculateROI()" class="w-full p-2.5 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                        </div>
+                        <div class="bg-red-50 dark:bg-red-950/40 p-3 rounded-2xl border border-red-100 dark:border-red-900 flex flex-col justify-center">
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Calculated ROI Profit Percentage</span>
+                            <span id="roiResult" class="text-2xl font-extrabold text-brand-600 dark:text-red-400">+600%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROI Chart -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm">
+                    <h3 class="text-base font-bold text-gray-900 dark:text-white mb-4">Monthly Revenue vs Campaign Cost Breakdown</h3>
+                    <div class="h-64">
+                        <canvas id="roiChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE 9: USER MANAGEMENT -->
+            <section id="page-users" class="page-content space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">User Management & Team Roles</h2>
+                        <p class="text-xs text-gray-500">Manage internal marketing team accounts, roles, and permissions.</p>
+                    </div>
+                    <button onclick="toggleModal('userModal')" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm shadow flex items-center gap-2">
+                        <i class="fa-solid fa-user-plus"></i> Switch / Login User
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm text-center space-y-3">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="w-20 h-20 rounded-full mx-auto border-2 border-brand-600 object-cover" alt="Sarah Jenkins">
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white">Sarah Jenkins</h4>
+                            <p class="text-xs text-brand-600 dark:text-red-400 font-semibold">Marketing Lead</p>
+                            <p class="text-[11px] text-gray-400">sarah@dataalcott.com</p>
+                        </div>
+                        <span class="inline-block bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full">Active Admin</span>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm text-center space-y-3">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" class="w-20 h-20 rounded-full mx-auto border-2 border-gray-300 object-cover" alt="Alex Rivera">
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white">Alex Rivera</h4>
+                            <p class="text-xs text-gray-500 font-semibold">Email Content Strategist</p>
+                            <p class="text-[11px] text-gray-400">alex@dataalcott.com</p>
+                        </div>
+                        <span class="inline-block bg-gray-100 text-gray-600 text-[10px] font-bold px-2.5 py-0.5 rounded-full">Editor</span>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm text-center space-y-3">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80" class="w-20 h-20 rounded-full mx-auto border-2 border-gray-300 object-cover" alt="Maria Garcia">
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white">Maria Garcia</h4>
+                            <p class="text-xs text-gray-500 font-semibold">Data Analyst</p>
+                            <p class="text-[11px] text-gray-400">maria@dataalcott.com</p>
+                        </div>
+                        <span class="inline-block bg-gray-100 text-gray-600 text-[10px] font-bold px-2.5 py-0.5 rounded-full">Viewer</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL 1: CREATE / EDIT CAMPAIGN -->
+    <div id="campaignModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-xl overflow-hidden border border-red-100 dark:border-gray-700">
+            <div class="bg-brand-600 text-white px-6 py-4 flex items-center justify-between">
+                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-paper-plane"></i> <span id="campaignModalTitle">Create Campaign</span></h3>
+                <button onclick="toggleModal('campaignModal')" class="text-white/80 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="campaignForm" onsubmit="saveCampaign(event)" class="p-6 space-y-4">
+                <input type="hidden" id="campaignId">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Campaign Title</label>
+                    <input type="text" id="campaignTitle" required placeholder="e.g. Summer Special Sale Email" class="w-full p-2.5 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Status</label>
+                        <select id="campaignStatus" class="w-full p-2.5 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                            <option value="Draft">Draft</option>
+                            <option value="Scheduled">Scheduled</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Target Segment</label>
+                        <select id="campaignSegment" class="w-full p-2.5 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                            <option value="VIP">VIP Subscribers</option>
+                            <option value="New Leads">New Leads</option>
+                            <option value="Customers">Customers</option>
+                            <option value="Inactive">Inactive List</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Schedule Send Date</label>
+                    <input type="date" id="campaignDate" required class="w-full p-2.5 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                </div>
+                <div class="flex justify-end space-x-2 pt-4">
+                    <button type="button" onclick="toggleModal('campaignModal')" class="px-4 py-2 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-xs font-bold bg-brand-600 text-white rounded-xl hover:bg-brand-700 shadow">Save Campaign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: ADD SUBSCRIBER -->
+    <div id="subscriberModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-md rounded-3xl shadow-xl overflow-hidden border border-red-100 dark:border-gray-700">
+            <div class="bg-brand-600 text-white px-6 py-4 flex items-center justify-between">
+                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-user-plus"></i> Add Subscriber</h3>
+                <button onclick="toggleModal('subscriberModal')" class="text-white/80 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="subscriberForm" onsubmit="saveSubscriber(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+                    <input type="text" id="subscriberName" required placeholder="John Doe" class="w-full p-2.5 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+                    <input type="email" id="subscriberEmail" required placeholder="john@example.com" class="w-full p-2.5 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Segment Tag</label>
+                    <select id="subscriberSegment" class="w-full p-2.5 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                        <option value="VIP">VIP</option>
+                        <option value="New Leads">New Leads</option>
+                        <option value="Customers">Customers</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-2 pt-4">
+                    <button type="button" onclick="toggleModal('subscriberModal')" class="px-4 py-2 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-xs font-bold bg-brand-600 text-white rounded-xl hover:bg-brand-700 shadow">Add Contact</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: CREATE TEMPLATE -->
+    <div id="templateModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-xl overflow-hidden border border-red-100 dark:border-gray-700">
+            <div class="bg-brand-600 text-white px-6 py-4 flex items-center justify-between">
+                <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-envelope-open-text"></i> Create Email Template</h3>
+                <button onclick="toggleModal('templateModal')" class="text-white/80 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="templateForm" onsubmit="saveTemplate(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Template Name</label>
+                    <input type="text" id="templateName" required placeholder="e.g. Monthly Newsletter Template" class="w-full p-2.5 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Subject Line</label>
+                    <input type="text" id="templateSubject" required placeholder="Exclusive Deal Inside..." class="w-full p-2.5 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">HTML / Text Body Content</label>
+                    <textarea id="templateBody" rows="4" required placeholder="Hello {{Name}}, check out our latest offers..." class="w-full p-2.5 text-xs rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-brand-600 dark:text-white"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2 pt-4">
+                    <button type="button" onclick="toggleModal('templateModal')" class="px-4 py-2 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-xs font-bold bg-brand-600 text-white rounded-xl hover:bg-brand-700 shadow">Save Template</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 4: TEMPLATE PREVIEW MODAL -->
+    <div id="previewModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-xl overflow-hidden border border-red-100 dark:border-gray-700">
+            <div class="bg-gray-900 text-white px-6 py-4 flex items-center justify-between">
+                <h3 class="font-bold text-sm flex items-center gap-2" id="previewTitle">Email Template Preview</h3>
+                <button onclick="toggleModal('previewModal')" class="text-white/80 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-6 bg-gray-50 dark:bg-gray-900">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
+                    <div class="border-b pb-3">
+                        <p class="text-xs text-gray-400">Subject:</p>
+                        <p class="font-bold text-sm text-gray-800 dark:text-gray-100" id="previewSubject">Exclusive Offer</p>
+                    </div>
+                    <div class="text-xs text-gray-700 dark:text-gray-300 leading-relaxed" id="previewContent">
+                        Content Body
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: SIMULATED LOGIN / USER MODAL -->
+    <div id="userModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-sm rounded-3xl shadow-xl overflow-hidden border border-red-100 dark:border-gray-700 p-6 space-y-4 text-center">
+            <div class="w-16 h-16 bg-red-50 dark:bg-red-950/50 text-brand-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
+                <i class="fa-solid fa-user-gear"></i>
+            </div>
+            <h3 class="font-bold text-lg text-gray-900 dark:text-white">Switch Active User Profile</h3>
+            <p class="text-xs text-gray-500">Select user role for simulated session management:</p>
+            <div class="space-y-2">
+                <button onclick="switchUser('Sarah Jenkins', 'Marketing Lead')" class="w-full text-left p-3 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-brand-600 flex items-center justify-between text-xs">
+                    <div>
+                        <p class="font-bold text-gray-800 dark:text-gray-200">Sarah Jenkins</p>
+                        <p class="text-gray-400">Marketing Lead (Admin)</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-400"></i>
+                </button>
+                <button onclick="switchUser('Alex Rivera', 'Email Content Strategist')" class="w-full text-left p-3 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-brand-600 flex items-center justify-between text-xs">
+                    <div>
+                        <p class="font-bold text-gray-800 dark:text-gray-200">Alex Rivera</p>
+                        <p class="text-gray-400">Content Strategist</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-400"></i>
+                </button>
+            </div>
+            <button onclick="toggleModal('userModal')" class="text-xs text-gray-400 hover:underline pt-2">Close Window</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification Widget -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-gray-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 transition-all transform translate-y-20 opacity-0 z-50">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+        <span id="toastMsg">Action completed successfully!</span>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Initial Application Data State
+        let state = {
+            campaigns: [
+                { id: 1, title: "Summer Promo Special", status: "In Progress", segment: "VIP", date: "2026-06-15", openRate: "42.5%", clickRate: "14.2%" },
+                { id: 2, title: "New Feature Announcement", status: "Completed", segment: "Customers", date: "2026-05-10", openRate: "38.1%", clickRate: "11.0%" },
+                { id: 3, title: "Abandoned Cart Flow #1", status: "Scheduled", segment: "New Leads", date: "2026-07-01", openRate: "29.4%", clickRate: "8.5%" },
+                { id: 4, title: "Q3 Product Update Newsletter", status: "Draft", segment: "All", date: "2026-08-12", openRate: "0.0%", clickRate: "0.0%" }
+            ],
+            subscribers: [
+                { id: 1, name: "Emily Watson", email: "emily.w@example.com", segment: "VIP", status: "Active", date: "2026-01-12" },
+                { id: 2, name: "Michael Chang", email: "m.chang@techcorp.io", segment: "New Leads", status: "Active", date: "2026-02-18" },
+                { id: 3, name: "Sophia Martinez", email: "smartinez@design.org", segment: "Customers", status: "Active", date: "2026-03-04" },
+                { id: 4, name: "David Kim", email: "dkim@startup.co", segment: "Inactive", status: "Unsubscribed", date: "2025-11-20" }
+            ],
+            templates: [
+                { id: 1, name: "Product Launch Newsletter", subject: "Introducing our brand new CRM suite!", body: "Hi {{Name}},\n\nWe are thrilled to announce the launch of our next-generation marketing automation system." },
+                { id: 2, name: "Welcome Onboarding Email", subject: "Welcome to Data Alcott Systems!", body: "Hello {{Name}},\n\nThank you for joining us! Here are 3 tips to get started right away." }
+            ],
+            currentFilter: "All"
+        };
+
+        // Theme Toggle Setup
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // Responsive Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+        document.getElementById('mobileMenuBtn').addEventListener('click', toggleSidebar);
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-red-50', 'text-brand-600', 'dark:bg-red-950/50', 'dark:text-red-400');
+                el.classList.add('text-gray-600', 'dark:text-gray-300');
+            });
+
+            const targetPage = document.getElementById('page-' + tabId);
+            if (targetPage) targetPage.classList.remove('hidden');
+
+            const activeNav = document.getElementById('nav-' + tabId);
+            if (activeNav) {
+                activeNav.classList.add('bg-red-50', 'text-brand-600', 'dark:bg-red-950/50', 'dark:text-red-400');
+                activeNav.classList.remove('text-gray-600', 'dark:text-gray-300');
+            }
+
+            // Close sidebar on mobile after clicking
+            if (window.innerWidth < 768) {
+                const sidebar = document.getElementById('sidebar');
+                if (!sidebar.classList.contains('-translate-x-full')) toggleSidebar();
+            }
+        }
+
+        // Modal Helpers
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.toggle('hidden');
+        }
+
+        // Toast Feedback System
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // RENDER: Campaigns Table & Dashboard Summary
+        function renderCampaigns() {
+            const tbody = document.getElementById('campaignsTableBody');
+            const dashTbody = document.getElementById('dashboardCampaignsList');
+            tbody.innerHTML = '';
+            dashTbody.innerHTML = '';
+
+            let filtered = state.campaigns;
+            if (state.currentFilter !== 'All') {
+                filtered = filtered.filter(c => c.status === state.currentFilter);
+            }
+
+            filtered.forEach(c => {
+                let badgeClass = "bg-gray-100 text-gray-700";
+                if (c.status === 'In Progress') badgeClass = "bg-amber-100 text-amber-700";
+                if (c.status === 'Completed') badgeClass = "bg-emerald-100 text-emerald-700";
+                if (c.status === 'Scheduled') badgeClass = "bg-indigo-100 text-indigo-700";
+
+                const row = `
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/30">
+                        <td class="p-4 font-bold text-gray-900 dark:text-white">${c.title}</td>
+                        <td class="p-4"><span class="px-2.5 py-1 text-[11px] font-bold rounded-full ${badgeClass}">${c.status}</span></td>
+                        <td class="p-4 text-xs text-gray-600 dark:text-gray-300">${c.segment}</td>
+                        <td class="p-4 text-xs text-gray-500">${c.date}</td>
+                        <td class="p-4 text-xs">
+                            <span class="text-emerald-600 font-semibold">${c.openRate}</span> Open / <span class="text-brand-600 font-semibold">${c.clickRate}</span> Click
+                        </td>
+                        <td class="p-4 text-right space-x-2">
+                            <button onclick="editCampaign(${c.id})" class="text-gray-400 hover:text-brand-600"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteCampaign(${c.id})" class="text-gray-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+
+                // Also populate dashboard quick view
+                const dashRow = `
+                    <tr>
+                        <td class="p-3 font-semibold text-gray-800 dark:text-gray-200">${c.title}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 text-[10px] font-bold rounded-full ${badgeClass}">${c.status}</span></td>
+                        <td class="p-3 text-xs text-gray-500">${c.segment}</td>
+                        <td class="p-3 text-xs font-semibold text-emerald-600">${c.openRate}</td>
+                        <td class="p-3 text-xs font-semibold text-brand-600">${c.clickRate}</td>
+                    </tr>
+                `;
+                dashTbody.innerHTML += dashRow;
+            });
+
+            document.getElementById('statTotalCampaigns').innerText = state.campaigns.length;
+        }
+
+        // Campaign Actions: CRUD
+        function saveCampaign(e) {
+            e.preventDefault();
+            const id = document.getElementById('campaignId').value;
+            const title = document.getElementById('campaignTitle').value;
+            const status = document.getElementById('campaignStatus').value;
+            const segment = document.getElementById('campaignSegment').value;
+            const date = document.getElementById('campaignDate').value;
+
+            if (id) {
+                const index = state.campaigns.findIndex(c => c.id == id);
+                if (index !== -1) {
+                    state.campaigns[index] = { ...state.campaigns[index], title, status, segment, date };
+                    showToast('Campaign updated successfully!');
+                }
+            } else {
+                state.campaigns.push({
+                    id: Date.now(),
+                    title,
+                    status,
+                    segment,
+                    date,
+                    openRate: '0.0%',
+                    clickRate: '0.0%'
+                });
+                showToast('New Campaign created!');
+            }
+
+            toggleModal('campaignModal');
+            document.getElementById('campaignForm').reset();
+            renderCampaigns();
+        }
+
+        function editCampaign(id) {
+            const campaign = state.campaigns.find(c => c.id === id);
+            if (!campaign) return;
+            document.getElementById('campaignId').value = campaign.id;
+            document.getElementById('campaignTitle').value = campaign.title;
+            document.getElementById('campaignStatus').value = campaign.status;
+            document.getElementById('campaignSegment').value = campaign.segment;
+            document.getElementById('campaignDate').value = campaign.date;
+            document.getElementById('campaignModalTitle').innerText = "Edit Campaign";
+            toggleModal('campaignModal');
+        }
+
+        function deleteCampaign(id) {
+            state.campaigns = state.campaigns.filter(c => c.id !== id);
+            renderCampaigns();
+            showToast('Campaign deleted.');
+        }
+
+        function setCampaignFilter(status) {
+            state.currentFilter = status;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'dark:bg-gray-700', 'dark:text-gray-300');
+            });
+            event.target.classList.add('bg-brand-600', 'text-white');
+            renderCampaigns();
+        }
+
+        function filterCampaigns() {
+            const query = document.getElementById('campaignSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#campaignsTableBody tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        // RENDER: Subscribers Table
+        function renderSubscribers() {
+            const tbody = document.getElementById('subscribersTableBody');
+            tbody.innerHTML = '';
+
+            state.subscribers.forEach(s => {
+                const row = `
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/30">
+                        <td class="p-4">
+                            <p class="font-bold text-gray-900 dark:text-white">${s.name}</p>
+                            <p class="text-xs text-gray-400">${s.email}</p>
+                        </td>
+                        <td class="p-4"><span class="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-red-50 text-brand-600 dark:bg-red-950/50 dark:text-red-400">${s.segment}</span></td>
+                        <td class="p-4 text-xs"><span class="text-emerald-600 font-semibold">${s.status}</span></td>
+                        <td class="p-4 text-xs text-gray-500">${s.date}</td>
+                        <td class="p-4 text-right">
+                            <button onclick="deleteSubscriber(${s.id})" class="text-gray-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            document.getElementById('statTotalSubscribers').innerText = state.subscribers.length * 1250; // Dynamic scale simulation
+        }
+
+        function saveSubscriber(e) {
+            e.preventDefault();
+            const name = document.getElementById('subscriberName').value;
+            const email = document.getElementById('subscriberEmail').value;
+            const segment = document.getElementById('subscriberSegment').value;
+
+            state.subscribers.push({
+                id: Date.now(),
+                name,
+                email,
+                segment,
+                status: 'Active',
+                date: new Date().toISOString().split('T')[0]
+            });
+
+            toggleModal('subscriberModal');
+            document.getElementById('subscriberForm').reset();
+            renderSubscribers();
+            showToast('New subscriber added successfully!');
+        }
+
+        function deleteSubscriber(id) {
+            state.subscribers = state.subscribers.filter(s => s.id !== id);
+            renderSubscribers();
+            showToast('Subscriber removed.');
+        }
+
+        function filterSubscribers() {
+            const query = document.getElementById('subscriberSearch').value.toLowerCase();
+            const segment = document.getElementById('subscriberSegmentFilter').value;
+            const rows = document.querySelectorAll('#subscribersTableBody tr');
+
+            rows.forEach(row => {
+                const matchesSearch = row.innerText.toLowerCase().includes(query);
+                const matchesSegment = segment === 'All' || row.innerText.includes(segment);
+                row.style.display = matchesSearch && matchesSegment ? '' : 'none';
+            });
+        }
+
+        // RENDER: Email Templates
+        function renderTemplates() {
+            const grid = document.getElementById('templatesGrid');
+            grid.innerHTML = '';
+
+            state.templates.forEach(t => {
+                const card = `
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-red-100 dark:border-gray-700 shadow-sm space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="bg-red-50 text-brand-600 text-[10px] font-bold px-2 py-0.5 rounded-md">HTML Template</span>
+                                <i class="fa-solid fa-file-code text-gray-400"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-900 dark:text-white text-base">${t.name}</h3>
+                            <p class="text-xs text-gray-500 mt-1"><strong>Subject:</strong> ${t.subject}</p>
+                            <p class="text-xs text-gray-400 mt-2 line-clamp-2">${t.body}</p>
+                        </div>
+                        <button onclick="previewTemplate(${t.id})" class="w-full bg-gray-50 dark:bg-gray-700/50 hover:bg-brand-600 hover:text-white text-gray-700 dark:text-gray-200 font-semibold py-2 rounded-xl text-xs transition-colors">
+                            Preview Email
+                        </button>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        function saveTemplate(e) {
+            e.preventDefault();
+            const name = document.getElementById('templateName').value;
+            const subject = document.getElementById('templateSubject').value;
+            const body = document.getElementById('templateBody').value;
+
+            state.templates.push({ id: Date.now(), name, subject, body });
+            toggleModal('templateModal');
+            document.getElementById('templateForm').reset();
+            renderTemplates();
+            showToast('Email Template Saved!');
+        }
+
+        function previewTemplate(id) {
+            const t = state.templates.find(item => item.id === id);
+            if (!t) return;
+            document.getElementById('previewTitle').innerText = t.name;
+            document.getElementById('previewSubject').innerText = t.subject;
+            document.getElementById('previewContent').innerText = t.body;
+            toggleModal('previewModal');
+        }
+
+        // Landing Page Builder Simulation
+        function previewLandingPage(title) {
+            document.getElementById('previewTitle').innerText = title + " - Builder View";
+            document.getElementById('previewSubject').innerText = title;
+            document.getElementById('previewContent').innerHTML = `
+                <div class="p-6 text-center space-y-4 bg-gradient-to-b from-red-50 to-white rounded-2xl">
+                    <h2 class="text-xl font-bold text-gray-900">Sign Up For Our Campaign</h2>
+                    <p class="text-xs text-gray-500">Get early access to all our product launches and special discounts.</p>
+                    <input type="email" placeholder="Enter email..." class="p-2 border text-xs rounded-lg w-full max-w-xs">
+                    <br/>
+                    <button class="bg-brand-600 text-white font-bold text-xs px-4 py-2 rounded-lg">Subscribe Now</button>
+                </div>
+            `;
+            toggleModal('previewModal');
+        }
+
+        // Simulation & ROI Calculation
+        function calculateROI() {
+            const cost = parseFloat(document.getElementById('roiCost').value) || 0;
+            const rev = parseFloat(document.getElementById('roiRevenue').value) || 0;
+            if (cost <= 0) {
+                document.getElementById('roiResult').innerText = "N/A";
+                return;
+            }
+            const roi = ((rev - cost) / cost) * 100;
+            document.getElementById('roiResult').innerText = (roi >= 0 ? "+" : "") + roi.toFixed(0) + "%";
+        }
+
+        function exportCampaignsCSV() {
+            let csv = "ID,Campaign Title,Status,Segment,Schedule Date\n";
+            state.campaigns.forEach(c => {
+                csv += `${c.id},"${c.title}",${c.status},${c.segment},${c.date}\n`;
+            });
+            downloadCSV(csv, "Market_Auto_Campaigns.csv");
+        }
+
+        function exportSubscribersCSV() {
+            let csv = "ID,Name,Email,Segment,Status,Joined Date\n";
+            state.subscribers.forEach(s => {
+                csv += `${s.id},"${s.name}",${s.email},${s.segment},${s.status},${s.date}\n`;
+            });
+            downloadCSV(csv, "Market_Auto_Subscribers.csv");
+        }
+
+        function downloadCSV(csvContent, fileName) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('CSV Export Downloaded!');
+        }
+
+        function triggerWorkflowSimulation() {
+            showToast('Triggering Automated Workflow test cycle...');
+        }
+
+        function switchUser(name, role) {
+            document.getElementById('userNameDisplay').innerText = name;
+            showToast(`Switched active profile to ${name} (${role})`);
+            toggleModal('userModal');
+        }
+
+        // Initialize Charts (Chart.js)
+        window.onload = function () {
+            renderCampaigns();
+            renderSubscribers();
+            renderTemplates();
+
+            // Subscriber Growth Chart
+            const ctxGrowth = document.getElementById('growthChart').getContext('2d');
+            new Chart(ctxGrowth, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [
+                        {
+                            label: 'Subscribers Growth',
+                            data: [3200, 4100, 5200, 6100, 7000, 7800, 8450],
+                            borderColor: '#DC2626',
+                            backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Avg Open Rate (%)',
+                            data: [28, 30, 31, 35, 33, 34, 38],
+                            borderColor: '#4F46E5',
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // Campaign Status Doughnut
+            const ctxStatus = document.getElementById('statusDoughnutChart').getContext('2d');
+            new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Draft', 'Scheduled', 'In Progress', 'Completed'],
+                    datasets: [{
+                        data: [1, 1, 1, 1],
+                        backgroundColor: ['#3B82F6', '#6366F1', '#F59E0B', '#10B981']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Analytics Bar Chart
+            const ctxAnalyticsBar = document.getElementById('analyticsBarChart').getContext('2d');
+            new Chart(ctxAnalyticsBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Summer Special', 'New Feature', 'Abandoned Cart', 'Newsletter'],
+                    datasets: [
+                        { label: 'Click-Through Rate (%)', data: [14.2, 11.0, 8.5, 0.0], backgroundColor: '#DC2626' },
+                        { label: 'Bounce Rate (%)', data: [0.8, 1.2, 0.5, 0.0], backgroundColor: '#9CA3AF' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // Analytics Pie Chart
+            const ctxAnalyticsPie = document.getElementById('analyticsPieChart').getContext('2d');
+            new Chart(ctxAnalyticsPie, {
+                type: 'pie',
+                data: {
+                    labels: ['Gmail', 'Apple Mail', 'Outlook', 'Other'],
+                    datasets: [{
+                        data: [55, 25, 15, 5],
+                        backgroundColor: ['#EA4335', '#000000', '#0078D4', '#9CA3AF']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // ROI Chart
+            const ctxROI = document.getElementById('roiChart').getContext('2d');
+            new Chart(ctxROI, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1 2026', 'Q2 2026', 'Q3 2026', 'Q4 2026 (Est)'],
+                    datasets: [
+                        { label: 'Campaign Cost ($)', data: [2500, 3100, 3600, 4000], backgroundColor: '#FCA5A5' },
+                        { label: 'Revenue Generated ($)', data: [12000, 18500, 24000, 31000], backgroundColor: '#DC2626' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
